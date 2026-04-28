@@ -15,22 +15,18 @@ export function ResetPasswordScreen({ onDone }: ResetPasswordScreenProps) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Wait for Supabase to establish session from the URL hash token
+  // Listen for PASSWORD_RECOVERY event which fires when Supabase processes the reset token
   useEffect(() => {
-    const establishSession = async () => {
-      // Give Supabase time to process the hash token and set up the session
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
         setSessionReady(true);
-      } else {
-        // Retry after short delay — session may not be ready immediately
-        setTimeout(async () => {
-          const { data: retryData } = await supabase.auth.getSession();
-          setSessionReady(!!retryData.session);
-        }, 1500);
       }
-    };
-    establishSession();
+    });
+    // Also check if session already exists (e.g. on retry)
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) setSessionReady(true);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const inputClass =
