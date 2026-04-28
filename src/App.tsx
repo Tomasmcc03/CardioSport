@@ -48,7 +48,6 @@ export default function App() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('[CardioSport] Auth event:', event);
         if (event === 'PASSWORD_RECOVERY') {
           setShowResetPassword(true);
           return;
@@ -124,8 +123,6 @@ export default function App() {
         return;
       }
 
-      console.log('[CardioSport] Loaded', data?.length ?? 0, 'players');
-
       if (data && data.length > 0) {
         const players = data.map((row: any) => ({
           id: row.id,
@@ -170,8 +167,6 @@ export default function App() {
         return;
       }
 
-      console.log('[CardioSport] Loaded', data?.length ?? 0, 'appointments');
-
       if (data && data.length > 0) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -204,7 +199,6 @@ export default function App() {
 
         // Update past appointments in Supabase in the background
         if (toUpdate.length > 0) {
-          console.log('[CardioSport] Marking', toUpdate.length, 'appointments as completed');
           await supabase
             .from('appointments')
             .update({ status: 'completed' })

@@ -51,7 +51,6 @@ export function PlayerManagementScreen({ onBack, onNavigate }: PlayerManagementS
       if (error) {
         console.error('[CardioSport] Remove player error:', error.message);
       } else {
-        console.log('[CardioSport] Player removed from Supabase');
       }
     }
   };

@@ -64,9 +64,7 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
   // ── Confirmation screen ────────────────────────────────────────────────────
 
   const handleSubmit = async () => {
-    console.log('[CardioSport] handleSubmit called, selectedLocation:', selectedLocation, 'userId:', userId);
     const locationObj = getLocation();
-    console.log('[CardioSport] locationObj:', locationObj);
     if (!locationObj) {
       console.error('[CardioSport] No location found — booking aborted');
       return;
@@ -128,7 +126,6 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
         if (error) {
           console.error('[CardioSport] Appointment save error:', error.message);
         } else {
-          console.log('[CardioSport] Appointment saved to Supabase');
         }
       }
     }

@@ -60,7 +60,6 @@ export function AddPlayerScreen({ onBack, userId }: AddPlayerScreenProps) {
  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('[CardioSport] handleSubmit called');
  
     const today = new Date();
     const nextTestDate = new Date(today);
@@ -106,7 +105,6 @@ export function AddPlayerScreen({ onBack, userId }: AddPlayerScreenProps) {
       if (error) {
         console.error('[CardioSport] Add player error:', error.message);
       } else {
-        console.log('[CardioSport] Player saved to Supabase');
       }
     }
  

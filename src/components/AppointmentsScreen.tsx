@@ -36,7 +36,6 @@ export function AppointmentsScreen({ onBack, userType }: AppointmentsScreenProps
       if (error) {
         console.error('[CardioSport] Cancel error:', error.message);
       } else {
-        console.log('[CardioSport] Appointment cancelled in Supabase');
       }
     }
   };

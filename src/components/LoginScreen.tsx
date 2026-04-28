@@ -155,11 +155,6 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
         },
       });
 
-      console.log('[CardioSport] Individual sign up:', {
-        user: data?.user?.email ?? null,
-        confirmed: data?.user?.email_confirmed_at ?? null,
-        error: authError?.message ?? null,
-      });
 
       if (authError) {
         setError(authError.message);
@@ -224,11 +219,6 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
         },
       });
 
-      console.log('[CardioSport] Club sign up:', {
-        user: data?.user?.email ?? null,
-        confirmed: data?.user?.email_confirmed_at ?? null,
-        error: authError?.message ?? null,
-      });
 
       if (authError) {
         setError(authError.message);
