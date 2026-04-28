@@ -15,14 +15,14 @@ export function ResetPasswordScreen({ onDone }: ResetPasswordScreenProps) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Listen for PASSWORD_RECOVERY event which fires when Supabase processes the reset token
+  // Listen for auth events to detect when reset token session is ready
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if ((event === 'PASSWORD_RECOVERY' || event === 'INITIAL_SESSION') && session) {
         setSessionReady(true);
       }
     });
-    // Also check if session already exists (e.g. on retry)
+    // Also check immediately in case session already established
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) setSessionReady(true);
     });
