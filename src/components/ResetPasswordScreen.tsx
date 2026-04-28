@@ -49,10 +49,11 @@ export function ResetPasswordScreen({ onDone }: ResetPasswordScreenProps) {
     setSuccess(true);
     setLoading(false);
 
-    // Sign out after reset so user logs in fresh with new password
+    // Reload the page after reset — this clears all state cleanly
+    // and the normal load will clear localStorage and show the login screen
     setTimeout(async () => {
       await supabase.auth.signOut();
-      onDone();
+      window.location.href = window.location.origin;
     }, 2000);
   };
 
