@@ -38,13 +38,9 @@ export default function App() {
 
   useEffect(() => {
     const hash = window.location.hash;
-    const isRecovery = hash && hash.includes('type=recovery');
+    const isRecovery = hash && (hash.includes('type=recovery') || hash.includes('access_token'));
 
-    if (isRecovery) {
-      // Password recovery flow — preserve session token so reset screen can use it
-      setShowResetPassword(true);
-      window.history.replaceState(null, '', window.location.pathname);
-    } else {
+    if (!isRecovery) {
       // Normal load — clear session so user always starts at login screen
       localStorage.clear();
       supabase.auth.signOut().catch(() => {});
@@ -54,6 +50,10 @@ export default function App() {
       async (event, session) => {
         console.log('[CardioSport] Auth event:', event);
         if (event === 'PASSWORD_RECOVERY') {
+          setShowResetPassword(true);
+          return;
+        } else if (event === 'INITIAL_SESSION' && session?.user && isRecovery) {
+          // Recovery flow — session established from reset token
           setShowResetPassword(true);
           return;
         } else if (event === 'SIGNED_IN' && session?.user && !isRecovery) {

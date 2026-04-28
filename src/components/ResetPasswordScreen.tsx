@@ -8,26 +8,13 @@ interface ResetPasswordScreenProps {
 
 export function ResetPasswordScreen({ onDone }: ResetPasswordScreenProps) {
   const [newPassword, setNewPassword] = useState('');
-  const [sessionReady, setSessionReady] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Listen for auth events to detect when reset token session is ready
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if ((event === 'PASSWORD_RECOVERY' || event === 'INITIAL_SESSION') && session) {
-        setSessionReady(true);
-      }
-    });
-    // Also check immediately in case session already established
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setSessionReady(true);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+
 
   const inputClass =
     'w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors';
@@ -133,12 +120,9 @@ export function ResetPasswordScreen({ onDone }: ResetPasswordScreenProps) {
                 />
               </div>
 
-              {!sessionReady && (
-                <p className="text-sm text-gray-400 text-center">Verifying reset link...</p>
-              )}
               <button
                 onClick={handleReset}
-                disabled={loading || !sessionReady}
+                disabled={loading}
                 className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 rounded-xl active:opacity-80 flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? <Loader className="w-5 h-5 animate-spin" /> : 'Update Password'}
