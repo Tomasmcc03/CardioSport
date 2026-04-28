@@ -38,27 +38,27 @@ export default function App() {
 
   useEffect(() => {
     // Check URL hash for password recovery token on page load
-    // Supabase puts type=recovery in the hash when user clicks reset link
     const hash = window.location.hash;
     if (hash && hash.includes('type=recovery')) {
       setShowResetPassword(true);
-      // Clean up the URL hash so it doesn't persist
       window.history.replaceState(null, '', window.location.pathname);
+      return;
     }
 
-    // Use onAuthStateChange as the single source of truth.
-    // INITIAL_SESSION fires on load, SIGNED_IN fires on login.
+    // Clear any existing session on load so users always start at login screen
+    localStorage.clear();
+    supabase.auth.signOut().catch(() => {});
+
+    // Listen for auth events — only handle SIGNED_IN, not INITIAL_SESSION
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('[CardioSport] Auth event:', event);
         if (event === 'PASSWORD_RECOVERY') {
-          // User clicked the reset password link — show reset screen
           setShowResetPassword(true);
           return;
-        } else if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
+        } else if (event === 'SIGNED_IN' && session?.user) {
           if (suppressNavigation.current) return;
-          // Skip if already logged in to prevent remounting screens mid-flow
-          if (event === 'SIGNED_IN' && isLoggedIn) return;
+          if (isLoggedIn) return;
           setShowResetPassword(false);
           await loadUserProfile(session.user.id);
           setIsLoggedIn(true);
