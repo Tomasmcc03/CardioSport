@@ -37,32 +37,32 @@ export default function App() {
   const [showResetPassword, setShowResetPassword] = useState(false);
 
   useEffect(() => {
-    // Check URL hash for password recovery token on page load
     const hash = window.location.hash;
-    if (hash && hash.includes('type=recovery')) {
+    const isRecovery = hash && hash.includes('type=recovery');
+
+    if (isRecovery) {
+      // Password recovery flow — preserve session token so reset screen can use it
       setShowResetPassword(true);
       window.history.replaceState(null, '', window.location.pathname);
-      return;
+    } else {
+      // Normal load — clear session so user always starts at login screen
+      localStorage.clear();
+      supabase.auth.signOut().catch(() => {});
     }
 
-    // Clear any existing session on load so users always start at login screen
-    localStorage.clear();
-    supabase.auth.signOut().catch(() => {});
-
-    // Listen for auth events — only handle SIGNED_IN, not INITIAL_SESSION
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('[CardioSport] Auth event:', event);
         if (event === 'PASSWORD_RECOVERY') {
           setShowResetPassword(true);
           return;
-        } else if (event === 'SIGNED_IN' && session?.user) {
+        } else if (event === 'SIGNED_IN' && session?.user && !isRecovery) {
           if (suppressNavigation.current) return;
           if (isLoggedIn) return;
           setShowResetPassword(false);
           await loadUserProfile(session.user.id);
           setIsLoggedIn(true);
-        } else if (event === 'SIGNED_OUT') {
+        } else if (event === 'SIGNED_OUT' && !isRecovery) {
           setIsLoggedIn(false);
           setCurrentScreen('home');
           logout();
