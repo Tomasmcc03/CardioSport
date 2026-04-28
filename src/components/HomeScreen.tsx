@@ -24,7 +24,10 @@ function IndividualPlayerHome({ username, onLogout, onNavigate }: Omit<HomeScree
   const health = useAppStore((state) => state.health);
  
   const nextAppointment = appointments.find((a) => a.status === 'upcoming') ?? null;
-  const completedTests = appointments.filter((a) => a.status === 'completed').length;
+  const completedAppointments = appointments.filter((a) => a.status === 'completed');
+  const completedTests = completedAppointments.length;
+  const sortedCompleted = [...completedAppointments].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const lastTest = sortedCompleted.length > 0 ? sortedCompleted[0].date : 'N/A';
  
   const statusColor =
     health.overallStatus === 'Cleared'  ? 'bg-green-100 text-green-700' :
@@ -86,13 +89,9 @@ function IndividualPlayerHome({ username, onLogout, onNavigate }: Omit<HomeScree
             </div>
           </div>
           <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-gray-500">Last Test:</span>
-              <span className="text-gray-900">{health.lastTest}</span>
-            </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Next Due:</span>
-              <span className="text-gray-900">{health.nextDue}</span>
+              <span className="text-gray-500">Last Test:</span>
+              <span className="text-gray-900">{lastTest}</span>
             </div>
           </div>
         </div>
@@ -172,10 +171,6 @@ function IndividualPlayerHome({ username, onLogout, onNavigate }: Omit<HomeScree
             <div className="flex items-center">
               <div className="w-2 h-2 bg-green-500 rounded-full mr-3" />
               <p className="text-gray-600 dark:text-gray-300 text-sm">All vitals within normal range</p>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mr-3" />
-              <p className="text-gray-600 dark:text-gray-300 text-sm">Next screening due in 3 months</p>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3" />
@@ -441,4 +436,3 @@ function ClubAdminHome({ username, onLogout, onNavigate }: Omit<HomeScreenProps,
     </div>
   );
 }
- 

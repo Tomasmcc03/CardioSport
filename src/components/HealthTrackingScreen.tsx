@@ -15,7 +15,6 @@ export function HealthTrackingScreen({ onBack }: HealthTrackingScreenProps) {
     avgHR,
     hrVariability,
     weeklyData,
-    nextDue,
     overallStatus,
   } = health;
  
@@ -200,7 +199,6 @@ export function HealthTrackingScreen({ onBack }: HealthTrackingScreenProps) {
             <p>• Your heart rate is within normal range</p>
             <p>• HRV indicates good recovery</p>
             <p>• Continue regular monitoring</p>
-            <p>• Next cardiac screening due: {nextDue}</p>
           </div>
         </div>
  

@@ -12,9 +12,10 @@ interface SettingsScreenProps {
   setEmail: (email: string) => void;
   phone: string;
   setPhone: (phone: string) => void;
+  club?: string;
 }
 
-export function SettingsScreen({ onBack, onLogout, username, setUsername, email, setEmail, phone, setPhone }: SettingsScreenProps) {
+export function SettingsScreen({ onBack, onLogout, username, setUsername, email, setEmail, phone, setPhone, club }: SettingsScreenProps) {
   const [activeView, setActiveView] = useState<'main' | 'profile' | 'privacy' | 'about' | 'changePassword'>('main');
   const [showPassword, setShowPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
@@ -227,6 +228,17 @@ export function SettingsScreen({ onBack, onLogout, username, setUsername, email,
                 className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 dark:text-gray-500 cursor-not-allowed"
               />
             </div>
+            {club && (
+              <div>
+                <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Club</label>
+                <input
+                  type="text"
+                  value={club}
+                  disabled
+                  className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

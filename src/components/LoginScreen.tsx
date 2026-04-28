@@ -14,12 +14,14 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [individualData, setIndividualData] = useState({
     fullName: '',
+    clubName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -172,8 +174,13 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
       }
 
       if (data.user) {
-        if (individualData.phone) {
-          await supabase.from('profiles').update({ phone: `${individualData.phoneCode} ${individualData.phone}` }).eq('id', data.user.id);
+        // Small delay to ensure profile row is created by Supabase trigger before updating
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const updateData: Record<string, string> = {};
+        if (individualData.phone) updateData.phone = `${individualData.phoneCode} ${individualData.phone}`;
+        if (individualData.clubName) updateData.bio = individualData.clubName;
+        if (Object.keys(updateData).length > 0) {
+          await supabase.from('profiles').update(updateData).eq('id', data.user.id);
         }
         setLoading(false);
         setAuthMode('signin');
@@ -362,6 +369,10 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
                   <input type="text" required value={individualData.fullName} onChange={(e) => setIndividualData(p => ({ ...p, fullName: e.target.value }))} placeholder="e.g. Cian Murphy" className={inputClass} />
                 </div>
                 <div>
+                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Club Name</label>
+                  <input type="text" value={individualData.clubName} onChange={(e) => setIndividualData(p => ({ ...p, clubName: e.target.value }))} placeholder="e.g. Croke Park GAA" className={inputClass} />
+                </div>
+                <div>
                   <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Email Address *</label>
                   <input type="email" required value={individualData.email} onChange={(e) => setIndividualData(p => ({ ...p, email: e.target.value }))} placeholder="player@example.com" className={inputClass} />
                 </div>
@@ -372,7 +383,7 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
                       <option value="+353">🇮🇪 +353</option>
                       <option value="+44">🇬🇧 +44</option>
                     </select>
-                    <input type="tel" value={individualData.phone} onChange={(e) => setIndividualData(p => ({ ...p, phone: e.target.value }))} placeholder="87 123 4567" className={inputClass} />
+                    <input type="tel" inputMode="numeric" value={individualData.phone} onChange={(e) => setIndividualData(p => ({ ...p, phone: e.target.value.replace(/[^0-9\s]/g, '') }))} placeholder="87 123 4567" className={inputClass} />
                   </div>
                 </div>
                 <div>
@@ -381,7 +392,12 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Confirm Password *</label>
-                  <input type="password" required value={individualData.confirmPassword} onChange={(e) => setIndividualData(p => ({ ...p, confirmPassword: e.target.value }))} placeholder="Repeat your password" className={inputClass} />
+                  <div className="relative">
+                    <input type={showConfirmPassword ? 'text' : 'password'} required value={individualData.confirmPassword} onChange={(e) => setIndividualData(p => ({ ...p, confirmPassword: e.target.value }))} placeholder="Repeat your password" className={`${inputClass} pr-12`} />
+                    <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
                 <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-60">
                   {loading ? <Loader className="w-5 h-5 animate-spin" /> : 'Create Account'}
@@ -419,7 +435,7 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
                       <option value="+353">🇮🇪 +353</option>
                       <option value="+44">🇬🇧 +44</option>
                     </select>
-                    <input type="tel" required value={clubData.phone} onChange={(e) => setClubData(p => ({ ...p, phone: e.target.value }))} placeholder="1 234 5678" className={inputClass} />
+                    <input type="tel" inputMode="numeric" required value={clubData.phone} onChange={(e) => setClubData(p => ({ ...p, phone: e.target.value.replace(/[^0-9\s]/g, '') }))} placeholder="1 234 5678" className={inputClass} />
                   </div>
                 </div>
                 <div>
@@ -445,7 +461,12 @@ export function LoginScreen({ suppressNavigation }: LoginScreenProps) {
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Confirm Password *</label>
-                  <input type="password" required value={clubData.confirmPassword} onChange={(e) => setClubData(p => ({ ...p, confirmPassword: e.target.value }))} placeholder="Repeat your password" className={inputClass} />
+                  <div className="relative">
+                    <input type={showConfirmPassword ? 'text' : 'password'} required value={clubData.confirmPassword} onChange={(e) => setClubData(p => ({ ...p, confirmPassword: e.target.value }))} placeholder="Repeat your password" className={`${inputClass} pr-12`} />
+                    <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
                 <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-60">
                   {loading ? <Loader className="w-5 h-5 animate-spin" /> : 'Create Club Account'}

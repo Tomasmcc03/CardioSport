@@ -316,6 +316,7 @@ export default function App() {
                 setEmail={(val) => updateProfile({ email: val })}
                 phone={user.phone}
                 setPhone={(val) => updateProfile({ phone: val })}
+                club={user.bio}
               />
             )}
             {currentScreen === 'addPlayer' && (
