@@ -185,7 +185,7 @@ function IndividualPlayerHome({ username, onLogout, onNavigate }: Omit<HomeScree
           className="w-full bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-3xl px-4 py-4 flex items-center justify-center active:bg-red-100 dark:active:bg-red-900/30"
         >
           <LogOut className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
-          <span className="text-red-600 dark:text-red-400">Log Out</span>
+          <span className="text-red-600 dark:text-red-400">Sign Out</span>
         </button>
       </div>
     </div>
@@ -206,6 +206,7 @@ function ClubAdminHome({ username, onLogout, onNavigate }: Omit<HomeScreenProps,
   const complianceRate = totalPlayers > 0 ? Math.round((cleared / totalPlayers) * 100) : 0;
  
   const urgentPlayers = players.filter((p) => p.status === 'Overdue' || p.status === 'Due Soon').slice(0, 3);
+  // Only show requires attention section if there are urgent players
  
   const recentActivity = appointments
     .filter((a) => a.status === 'upcoming')

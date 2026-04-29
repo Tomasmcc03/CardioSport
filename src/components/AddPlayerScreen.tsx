@@ -31,6 +31,7 @@ export function AddPlayerScreen({ onBack, userId }: AddPlayerScreenProps) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [submittedName, setSubmittedName] = useState('');
   const [submittedEmail, setSubmittedEmail] = useState('');
+  const [submitError, setSubmitError] = useState('');
  
   const gaaPositions = [
     'Goalkeeper', 'Full-back', 'Corner-back', 'Wing-back', 'Centre-back',
@@ -60,6 +61,7 @@ export function AddPlayerScreen({ onBack, userId }: AddPlayerScreenProps) {
  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('[CardioSport] AddPlayer - userId:', userId);
  
     const today = new Date();
     const nextTestDate = new Date(today);
@@ -77,10 +79,7 @@ export function AddPlayerScreen({ onBack, userId }: AddPlayerScreenProps) {
       testsCompleted: 0,
     };
  
-    // Write to Zustand store for instant UI update
-    addPlayer(playerPayload);
-
-    // Write to Supabase players table using userId passed from App.tsx
+    // Write to Supabase first — must complete before showing success
     if (userId) {
       const { error } = await supabase.from('players').insert({
         club_id: userId,
@@ -104,11 +103,13 @@ export function AddPlayerScreen({ onBack, userId }: AddPlayerScreenProps) {
       });
       if (error) {
         console.error('[CardioSport] Add player error:', error.message);
-      } else {
+        setSubmitError(`Failed to save player: ${error.message}`);
+        return;
       }
     }
- 
-    // Save submitted values before resetting form
+
+    // Only update store and show success after Supabase confirms
+    addPlayer(playerPayload);
     setSubmittedName(playerData.fullName);
     setSubmittedEmail(playerData.email);
     setShowSuccess(true);
@@ -160,6 +161,11 @@ export function AddPlayerScreen({ onBack, userId }: AddPlayerScreenProps) {
  
       {/* Form */}
       <div className="px-6 py-6 -mt-4">
+        {submitError && (
+          <div className="mx-6 mt-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl">
+            <p className="text-red-600 text-sm">{submitError}</p>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
  
           {/* Personal Information */}

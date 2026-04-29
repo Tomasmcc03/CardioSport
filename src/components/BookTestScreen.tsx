@@ -10,7 +10,7 @@ interface BookTestScreenProps {
 }
 
 export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps) {
-  const { addAppointment, players } = useAppStore();
+  const { addAppointment, players, updatePlayerStatus } = useAppStore();
 
   const [bookingMode, setBookingMode] = useState<'single' | 'bulk'>('single');
   const [step, setStep] = useState(1);
@@ -72,8 +72,11 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
 
     // userId is passed as prop from App.tsx — no auth call needed here
 
+    // Show confirmation screen immediately
+    setBookingConfirmed(true);
+
     if (userType === 'club' && bookingMode === 'bulk') {
-      // Add one appointment per selected player
+      // Add one appointment per selected player in background
       for (const playerId of selectedPlayers) {
         const player = players.find(p => String(p.id) === playerId);
         const appointmentData = {
@@ -84,9 +87,7 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
           address:  locationObj.address,
           patient:  player?.name ?? 'Club Player',
         };
-        // Write to Zustand store
         addAppointment(appointmentData);
-        // Write to Supabase database
         if (userId) {
           await supabase.from('appointments').insert({
             user_id:  userId,
@@ -98,6 +99,11 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
             patient:  appointmentData.patient,
             status:   'upcoming',
           });
+          await supabase
+            .from('players')
+            .update({ status: 'Cleared' })
+            .eq('id', Number(playerId));
+          updatePlayerStatus(Number(playerId), 'Cleared');
         }
       }
     } else {
@@ -109,9 +115,7 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
         address:  locationObj.address,
         patient:  'Player',
       };
-      // Write to Zustand store
       addAppointment(appointmentData);
-      // Write to Supabase database
       if (userId) {
         const { error } = await supabase.from('appointments').insert({
           user_id:  userId,
@@ -125,12 +129,16 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
         });
         if (error) {
           console.error('[CardioSport] Appointment save error:', error.message);
-        } else {
+        }
+        if (userType === 'club' && selectedPlayers.length === 1) {
+          await supabase
+            .from('players')
+            .update({ status: 'Cleared' })
+            .eq('id', Number(selectedPlayers[0]));
+          updatePlayerStatus(Number(selectedPlayers[0]), 'Cleared');
         }
       }
     }
-
-    setBookingConfirmed(true);
   };
 
   const togglePlayerSelection = (playerId: string) => {
@@ -339,7 +347,7 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
               onBack={() => setStep(bookingMode === 'bulk' ? 3 : 2)}
               requestClubPayment={requestClubPayment}
               setRequestClubPayment={setRequestClubPayment}
-              showPaymentOption={true}
+              showPaymentOption={false}
             />
           )}
         </div>
@@ -408,7 +416,7 @@ export function BookTestScreen({ userType, onBack, userId }: BookTestScreenProps
             onBack={() => setStep(2)}
             requestClubPayment={requestClubPayment}
             setRequestClubPayment={setRequestClubPayment}
-            showPaymentOption={true}
+            showPaymentOption={false}
           />
         )}
       </div>

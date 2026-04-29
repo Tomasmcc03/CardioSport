@@ -92,6 +92,7 @@ export default function App() {
           profile.username ?? 'User',
           (profile.user_type ?? 'individual') as 'individual' | 'club'
         );
+        console.log('[CardioSport] Profile phone:', profile.phone);
         updateProfile({
           email: profile.email ?? '',
           phone: profile.phone ?? '',
