@@ -43,13 +43,6 @@ export function TestHistoryScreen({ onBack }: TestHistoryScreenProps) {
  
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
-      {/* GAA Background Decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg className="absolute bottom-20 right-0 w-64 h-64 text-green-50 opacity-15" viewBox="0 0 200 200" fill="none" stroke="currentColor">
-          <path d="M 60 180 L 80 40 M 80 40 Q 90 20 110 25 Q 130 30 140 50 L 150 80 Q 155 100 140 110 Q 125 120 110 110 L 80 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-          <ellipse cx="125" cy="70" rx="25" ry="35" strokeWidth="2" transform="rotate(-25 125 70)" />
-        </svg>
-      </div>
  
       {/* Header */}
       <div className="bg-white border-b border-gray-200">

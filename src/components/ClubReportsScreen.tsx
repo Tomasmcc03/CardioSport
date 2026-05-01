@@ -129,16 +129,7 @@ export function ClubReportsScreen({ onBack }: ClubReportsScreenProps) {
  
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
-      {/* GAA Background Decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg className="absolute top-60 -left-16 w-72 h-72 text-purple-50 opacity-15" viewBox="0 0 200 200" fill="none" stroke="currentColor">
-          <circle cx="100" cy="100" r="70" strokeWidth="2" />
-          <path d="M 100 30 Q 115 100 100 170" strokeWidth="2" />
-          <path d="M 100 30 Q 85 100 100 170" strokeWidth="2" />
-          <path d="M 30 100 Q 100 115 170 100" strokeWidth="2" />
-          <path d="M 30 100 Q 100 85 170 100" strokeWidth="2" />
-        </svg>
-      </div>
+     
  
       {/* Header */}
       <div className="bg-white border-b border-gray-200">

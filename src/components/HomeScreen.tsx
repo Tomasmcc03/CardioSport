@@ -36,18 +36,6 @@ function IndividualPlayerHome({ username, onLogout, onNavigate }: Omit<HomeScree
  
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
-      {/* GAA Background Decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg className="absolute top-60 -left-20 w-72 h-72 text-red-50 opacity-15" viewBox="0 0 200 200" fill="none" stroke="currentColor">
-          <path d="M 60 180 L 80 40 M 80 40 Q 90 20 110 25 Q 130 30 140 50 L 150 80 Q 155 100 140 110 Q 125 120 110 110 L 80 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-          <ellipse cx="125" cy="70" rx="25" ry="35" strokeWidth="2" transform="rotate(-25 125 70)" />
-        </svg>
-        <svg className="absolute bottom-32 right-10 w-48 h-48 text-red-50 opacity-20" viewBox="0 0 200 200" fill="none" stroke="currentColor">
-          <circle cx="100" cy="100" r="60" strokeWidth="2" />
-          <path d="M 100 40 Q 110 100 100 160" strokeWidth="2" />
-          <path d="M 100 40 Q 90 100 100 160" strokeWidth="2" />
-        </svg>
-      </div>
  
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 px-6 pt-12 pb-6 border-b border-gray-100 dark:border-gray-700">
@@ -219,16 +207,6 @@ function ClubAdminHome({ username, onLogout, onNavigate }: Omit<HomeScreenProps,
  
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
-      {/* GAA Background Decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg className="absolute top-40 -right-16 w-64 h-64 text-red-50 dark:text-red-900/20 opacity-20" viewBox="0 0 200 200" fill="none" stroke="currentColor">
-          <circle cx="100" cy="100" r="70" strokeWidth="2" />
-          <path d="M 100 30 Q 115 100 100 170" strokeWidth="2" />
-          <path d="M 100 30 Q 85 100 100 170" strokeWidth="2" />
-          <path d="M 30 100 Q 100 115 170 100" strokeWidth="2" />
-          <path d="M 30 100 Q 100 85 170 100" strokeWidth="2" />
-        </svg>
-      </div>
  
       {/* Header */}
       <div className="bg-gradient-to-br from-red-500 to-pink-600">

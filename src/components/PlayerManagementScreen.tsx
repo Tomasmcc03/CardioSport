@@ -57,20 +57,6 @@ export function PlayerManagementScreen({ onBack, onNavigate }: PlayerManagementS
  
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
-      {/* GAA Background Decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg className="absolute top-32 -right-20 w-80 h-80 text-green-50 opacity-15" viewBox="0 0 200 200" fill="none" stroke="currentColor">
-          <circle cx="100" cy="100" r="75" strokeWidth="2" />
-          <path d="M 100 25 Q 118 100 100 175" strokeWidth="2" />
-          <path d="M 100 25 Q 82 100 100 175" strokeWidth="2" />
-          <path d="M 25 100 Q 100 118 175 100" strokeWidth="2" />
-          <path d="M 25 100 Q 100 82 175 100" strokeWidth="2" />
-        </svg>
-        <svg className="absolute bottom-10 left-0 w-56 h-56 text-green-50 opacity-15" viewBox="0 0 200 200" fill="none" stroke="currentColor">
-          <path d="M 60 180 L 80 40 M 80 40 Q 90 20 110 25 Q 130 30 140 50 L 150 80 Q 155 100 140 110 Q 125 120 110 110 L 80 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-          <ellipse cx="125" cy="70" rx="25" ry="35" strokeWidth="2" transform="rotate(-25 125 70)" />
-        </svg>
-      </div>
  
       {/* Remove confirmation modal */}
       {removingId !== null && (

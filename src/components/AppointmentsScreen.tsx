@@ -47,14 +47,7 @@ export function AppointmentsScreen({ onBack, userType }: AppointmentsScreenProps
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
  
-      {/* GAA Background Decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg className="absolute top-40 right-5 w-48 h-48 text-blue-50 opacity-20" viewBox="0 0 200 200" fill="none" stroke="currentColor">
-          <circle cx="100" cy="100" r="65" strokeWidth="2" />
-          <path d="M 100 35 Q 112 100 100 165" strokeWidth="2" />
-          <path d="M 100 35 Q 88 100 100 165" strokeWidth="2" />
-        </svg>
-      </div>
+     
  
       {/* Cancel confirmation modal */}
       {cancellingId !== null && (
